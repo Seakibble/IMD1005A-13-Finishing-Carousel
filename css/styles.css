@@ -11,6 +11,7 @@ body {
     margin-bottom: 200vh;
 }
 
+/* By setting the darkmode with a class on body, we can just specify a few styles to override based on this one class, and they'll apply with minimal effort from our script. */
 body.darkMode {
     background-color: #111;
     color: #eee;
@@ -53,6 +54,7 @@ button {
     text-align: right;
 }
 
+/* Our image viewer is set to position fixed, with bottom, top, left and right all set to 0. The effect of this is that it will fill the whole screen no matter where we are on the page. position: fixed is like position: absolute in that it will remove itself from the regular page flow for us to set it where we like, but with the added effect that it will follow us on the page. */
 
 .imgViewer {
     position: fixed;
@@ -61,18 +63,22 @@ button {
     left: 0;
     right: 0;
 
+    /* z-index needs to be high so that it sits above every other element on the page. */
     z-index: 99;
 
+    /* We're just doing our due dilligence to make sure the image is centered properly here. */
     display: grid;
     place-content: center;
 
     background-color: rgba(0, 0, 0, 0.8);
 
+    /* This and the .hidden class will let us fade the imgViewer nicely in and out of apparent existence. */
     transition: opacity 0.5s;
 }
 
 .hidden {
     opacity: 0;
+    /* this style prevents the element from blocking the pointer. Without this, nothing on the page will be clickable because, even with opacity 0, the element still *exists* on the page. Only display: none would remove this, but display: none can't be transitioned, so this is a nice workaround. */
     pointer-events: none;
 }
 
@@ -101,7 +107,8 @@ main {
 
 
 
-
+/* The carousel needs the images and containers to be a consistent height, so we're specifying them here. This will prevent images of different sizes from appearing differently on the carousel. We're setting a custom property so we can easly adjust this height across the several elements that need it set. */
+/* We're putting position: relative on the carousel because the images and buttons need to be positioned absolutely with respect to this div. On its own, relative doesn't do anything to the div, but it makes absolutely positioned elements within it position themselves with resepect to this element, rather than the page in general. */
 .carousel {
     --height: 400px;
 
@@ -113,15 +120,18 @@ main {
     background: black;
 }
 
+/* Position: absolute removes the element from the normal flow of the page. This lets us stack them on top of each other. */
 .carousel img {
     height: var(--height);
     width: 100%;
+    /* object-fit defines how the image should behave if the container and the image size don't match. Cover will make it so the image will fill the entire available space, cropping if necessary. Contain does the reverse: it compresses the image so it fits within the space completely. */
     object-fit: cover;
     position: absolute;
 
     transition: opacity 0.5s;
 }
 
+/* Like the images, the buttons are positioned absolutely. Here we just stick them on their respective sides. By default, they'll sit to the left, so we just need to make the right button sit to the right. We're setting the top and bottom to 0 so that they occupy the full height of the carousel.*/
 .carousel button {
     top: 0;
     bottom: 0;
@@ -142,6 +152,7 @@ main {
 .carousel .btnRight {
     right: 0;
 }
+/* Here we're just making the arrow icons display nicely in the buttons. */
 .carousel button span {
     font-size: 3em;
     transition: transform 0.25s, color, 0.25s;
@@ -151,10 +162,12 @@ main {
     color: white;
 }
 
+/* We need to ensure the first image has priority over the other images because they're rendered on top of each other in the sequence they're defined in the HTML - so the last image would be on top. But the slideshow should start at the beginning.  */
 .carousel img:first-child {
     z-index: 1;
 }
 
+/* Finally we have a couple of media queries that just make the page display more nicely on mobile. */
 @media screen and (width < 540px) {
     .gallery {
         grid-template-columns: 1fr;
